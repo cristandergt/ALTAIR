@@ -1,0 +1,36 @@
+# ============================================================
+# ALTAIR — Root .gitignore
+# ============================================================
+
+# ── Python / Backend ─────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+backend/.env
+backend/venv/
+backend/.venv/
+backend/*.egg-info/
+backend/dist/
+backend/.pytest_cache/
+*.pyc
+
+# ── Node / Frontend ──────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.production
+
+# ── IDE / OS ─────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+node_modules/

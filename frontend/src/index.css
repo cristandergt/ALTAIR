@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════
+   ALTAIR — Global Stylesheet
+   Design System: Professional Telemetry / Mission Control UI
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background-color: #080C14;
+  color: #F0F4F8;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbars ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #0B0F19; }
+::-webkit-scrollbar-thumb { background: #1E2D40; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #2A3F5A; }
+
+/* ── Selection ──────────────────────────────────────────────── */
+::selection {
+  background: rgba(41, 182, 246, 0.25);
+  color: #F0F4F8;
+}
+
+/* ── Leaflet Overrides ──────────────────────────────────────── */
+.leaflet-container {
+  background: #080C14 !important;
+  font-family: "Inter", sans-serif;
+}
+
+.leaflet-control-attribution {
+  background: rgba(8, 12, 20, 0.85) !important;
+  color: #4A5E7A !important;
+  font-size: 9px !important;
+  border-top: 1px solid #1E2D40 !important;
+}
+.leaflet-control-attribution a { color: #29B6F6 !important; }
+
+.leaflet-control-zoom {
+  border: 1px solid #1E2D40 !important;
+  border-radius: 3px !important;
+  overflow: hidden;
+}
+.leaflet-control-zoom a {
+  background: #111827 !important;
+  color: #8A9BB8 !important;
+  border: none !important;
+  border-bottom: 1px solid #1E2D40 !important;
+  line-height: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: #1A2235 !important;
+  color: #F0F4F8 !important;
+}
+
+/* Custom analog marker pulse */
+@keyframes markerPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.analog-marker-pulse { animation: markerPulse 2s ease-in-out infinite; }
+
+/* ── Component Base Classes ─────────────────────────────────── */
+@layer components {
+  .panel {
+    @apply bg-panel border border-border rounded-sm;
+  }
+
+  .panel-header {
+    @apply px-3 py-2 border-b border-border flex items-center gap-2;
+  }
+
+  .label-tag {
+    @apply text-2xs font-mono font-medium tracking-widest uppercase text-text-dim;
+  }
+
+  .metric-value {
+    @apply font-mono text-sm font-medium text-text-primary;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-cyan text-void text-xs font-semibold tracking-wide 
+           rounded-sm transition-all duration-150 hover:bg-cyan/90 
+           active:scale-95 select-none cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply px-3 py-1.5 border border-border text-text-secondary text-xs font-medium 
+           rounded-sm transition-all duration-150 hover:border-muted hover:text-text-primary
+           active:scale-95 select-none cursor-pointer;
+  }
+
+  .status-dot {
+    @apply inline-block w-1.5 h-1.5 rounded-full;
+  }
+
+  .risk-low      { @apply text-green-ok; }
+  .risk-moderate { @apply text-amber; }
+  .risk-high     { @apply text-amber/90; }
+  .risk-critical { @apply text-crimson; }
+
+  .risk-badge-low      { @apply bg-green-ok/10 text-green-ok border border-green-ok/20; }
+  .risk-badge-moderate { @apply bg-amber/10 text-amber border border-amber/20; }
+  .risk-badge-high     { @apply bg-amber/15 text-amber border border-amber/30; }
+  .risk-badge-critical { @apply bg-crimson/10 text-crimson border border-crimson/20; }
+
+  .fidelity-bar-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+  }
+}

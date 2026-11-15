@@ -1,0 +1,98 @@
+[
+  {
+    "id": "lunar_south_pole",
+    "name": "Lunar South Pole — Shackleton Crater",
+    "shortName": "Moon",
+    "body": "Moon",
+    "source": "NASA LRO Diviner Lunar Radiometer Experiment (DLRE)",
+    "coordinates": { "lat": -89.9, "lon": -90.0 },
+    "parameters": {
+      "temperature_min_c": -210,
+      "temperature_max_c": -50,
+      "temperature_mean_c": -130,
+      "solar_irradiance_wm2": 0,
+      "atmospheric_pressure_atm": 0,
+      "wind_speed_ms": 0,
+      "precipitation_mm_day": 0,
+      "regolith_type": "Basaltic anorthosite regolith, possible water-ice deposits (confirmed by LRO LAMP/LEND)",
+      "gravity_ms2": 1.62,
+      "radiation_msv_day": 1.84,
+      "dust_particle_size_um": 10,
+      "elevation_m": -4000,
+      "notes": "Permanently shadowed region (PSR). Temperature extremes derived from LRO Diviner Channel 6/7 data. Ice confirmed by LCROSS impact. Zero atmosphere — vacuum environment. Solar irradiance near-zero in PSR."
+    },
+    "hardware_risk_modifiers": {
+      "Rover": {
+        "thermal_stress_factor": 1.0,
+        "dust_ingestion_factor": 1.0,
+        "mobility_factor": 0.9,
+        "power_factor": 0.6,
+        "notes": "Extreme cold cycling degrades battery chemistry. Dust abrasion on wheel seals critical. Solar panels non-functional in PSR — requires RTG or beamed power."
+      },
+      "EVA Suit": {
+        "thermal_stress_factor": 1.0,
+        "dust_ingestion_factor": 1.0,
+        "mobility_factor": 0.85,
+        "power_factor": 0.5,
+        "notes": "Regolith electrostatic adhesion to visors. Suit joints risk cryogenic lock. CO2 scrubber thermal performance degraded. Radiation dose 1.84 mSv/day."
+      },
+      "Habitat": {
+        "thermal_stress_factor": 0.95,
+        "dust_ingestion_factor": 0.9,
+        "mobility_factor": 1.0,
+        "power_factor": 0.6,
+        "notes": "ISRU water-ice extraction viable. Regolith shielding mitigates radiation. Thermal management requires dedicated ATCS loops. Zero convective heat loss — only radiative."
+      }
+    },
+    "accent_color": "#64B5F6",
+    "flag_emoji": "🌑"
+  },
+  {
+    "id": "jezero_crater_mars",
+    "name": "Jezero Crater — Mars",
+    "shortName": "Mars",
+    "body": "Mars",
+    "source": "NASA MRO CRISM / Perseverance Rover MEDA Instrument / NASA PDS",
+    "coordinates": { "lat": 18.4, "lon": 77.6 },
+    "parameters": {
+      "temperature_min_c": -80,
+      "temperature_max_c": 20,
+      "temperature_mean_c": -55,
+      "solar_irradiance_wm2": 586,
+      "atmospheric_pressure_atm": 0.006,
+      "wind_speed_ms": 10,
+      "precipitation_mm_day": 0,
+      "regolith_type": "Iron-oxide basalt, olivine-carbonate minerals, ancient deltaic sediment (confirmed CRISM/SHERLOC)",
+      "gravity_ms2": 3.72,
+      "radiation_msv_day": 0.64,
+      "dust_particle_size_um": 3,
+      "elevation_m": -2600,
+      "notes": "Ancient crater lake delta. Temperature from Perseverance MEDA diurnal records. Thin CO2 atmosphere (95.3% CO2). Dust storms can drop irradiance by 50%. ISRU potential: MOXIE-heritage O2 extraction."
+    },
+    "hardware_risk_modifiers": {
+      "Rover": {
+        "thermal_stress_factor": 0.75,
+        "dust_ingestion_factor": 0.95,
+        "mobility_factor": 0.8,
+        "power_factor": 0.75,
+        "notes": "Dust accumulation on solar panels reduces power 10-40%. CO2 atmosphere allows minor convective cooling. Rocky deltaic terrain — wheel stress. Dust storm season operational protocols required."
+      },
+      "EVA Suit": {
+        "thermal_stress_factor": 0.8,
+        "dust_ingestion_factor": 0.95,
+        "mobility_factor": 0.75,
+        "power_factor": 0.7,
+        "notes": "Atmospheric pressure ~600 Pa — same suit design as lunar with CO2 scrubber priority. Fine dust (<3 µm) penetrates seals. UV + GCR + SEP radiation hazard."
+      },
+      "Habitat": {
+        "thermal_stress_factor": 0.7,
+        "dust_ingestion_factor": 0.9,
+        "mobility_factor": 1.0,
+        "power_factor": 0.75,
+        "notes": "ISRU: MOXIE-heritage O2 from CO2 atmosphere. Regolith sintering/concrete construction viable. Perchlorate soil contamination hazard for life support systems."
+      }
+    },
+    "accent_color": "#EF5350",
+    "flag_emoji": "🔴"
+  }
+]

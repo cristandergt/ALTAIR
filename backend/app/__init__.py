@@ -1,0 +1,1 @@
+"""ALTAIR — App package init"""
