@@ -147,4 +147,4 @@ ALTAIR/
 
 ---
 
-*Team Stalred / STRD · NASA Space Apps Challenge · 2024*
+*Team Stalred / STRD · NASA Space Apps Challenge · 2026*
