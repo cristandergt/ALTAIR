@@ -2,149 +2,130 @@
 
 **Team Stalred / STRD — NASA Space Apps Challenge**
 
-> *Select an Earth analog. Measure real NASA telemetry. Score its fidelity against the Moon or Mars.*
+ALTAIR helps mission planners compare Earth analog sites against the Moon (Lunar South Pole / Shackleton Crater) and Mars (Jezero Crater). Select a target and a location on Earth to fetch telemetry, compute an analog fidelity score, and view an operational risk assessment.
 
----
+## Challenge alignment & impact
+- **Problem:** Identifying and justifying Earth analog sites for planetary missions is time-consuming and often relies on fragmented data.
+- **Solution:** A mission-control web app that combines live Earth environmental data with curated NASA planetary reference parameters to rapidly evaluate analog suitability.
+- **Users:** Mission designers, analog field teams, educators, and outreach/demo scenarios for planetary exploration.
 
-## Requisitos previos
+## Key features
+- Mission target selection: Lunar South Pole (Shackleton Crater) and Jezero Crater (Mars)
+- Interactive Earth map to pick an analog location
+- Live Earth telemetry fetch for selected coordinates
+- Fidelity scoring engine comparing Earth vs. planetary conditions
+- Operational risk assessment and telemetry visualization
+- NASA GIBS map layers for Earth context
 
-Instala esto antes de empezar:
-
-| Herramienta | Versión mínima | Descarga |
+## Data sources (real vs. computed)
+| Data | Source | Type |
 |---|---|---|
-| **Python** | 3.10+ | https://python.org/downloads |
-| **Node.js** | 18+ | https://nodejs.org |
-| **Git** | cualquiera | https://git-scm.com |
+| Earth surface climatology (temperature, solar irradiance, wind, precipitation) | [NASA POWER Climatology API](https://power.larc.nasa.gov/) | **Live API (queried at runtime)** |
+| Earth elevation | [Open-Elevation API](https://api.open-elevation.com/) | **Live API (queried at runtime)** |
+| Lunar South Pole parameters | NASA LRO Diviner (DLRE) reference values, curated in project | **Static reference (NASA-sourced)** |
+| Mars Jezero Crater parameters | Perseverance MEDA / MRO CRISM / NASA PDS reference values, curated in project | **Static reference (NASA-sourced)** |
+| Earth map imagery layers | [NASA GIBS](https://earthdata.nasa.gov/eosdis/science-system-description/eosdis-components/gibs) | **Live tile services** |
+| Analog fidelity score & risk assessment | ALTAIR engine (`backend/app/services/fidelity_engine.py`) | **Computed by ALTAIR from above data** |
 
----
+> No API keys are required for the default public data sources used by this project.
 
-## Setup — Primera vez (clonar y configurar)
+## Architecture
+- **Frontend:** React + Vite + Tailwind + Leaflet (`frontend/`)
+- **Backend:** FastAPI (`backend/`)
+- **Core services:**
+  - `backend/app/services/telemetry_service.py` — fetches live Earth telemetry (NASA POWER + Open-Elevation)
+  - `backend/app/services/fidelity_engine.py` — computes fidelity score and risk assessment
+  - `backend/data/planetary_targets.json` — curated NASA planetary reference targets
+
+## Prerequisites
+| Tool | Minimum version | Download |
+|---|---|---|
+| Python | 3.10+ | https://python.org/downloads |
+| Node.js | 18+ | https://nodejs.org |
+| Git | any | https://git-scm.com |
+
+## Setup (first time)
 
 ```bash
-git clone https://github.com/tu-usuario/ALTAIR.git
+git clone <your-repo-url>
 cd ALTAIR
 ```
 
-### 1. Backend (Python / FastAPI)
+### 1. Backend (FastAPI)
 
 ```bash
 cd backend
-
-# Crear entorno virtual
 python -m venv .venv
 
-# Activar entorno virtual
-# Windows:
+# Activate virtual environment
+# Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+# Windows (cmd):
 .venv\Scripts\activate
 # macOS / Linux:
-source .venv/bin/activate
+# source .venv/bin/activate
 
-# Instalar dependencias
 pip install -r requirements.txt
-
-# Copiar configuración
-cp .env.template .env
+copy .env.template .env  # Windows (cmd)
+# cp .env.template .env  # macOS/Linux/PowerShell
 ```
 
 ### 2. Frontend (React / Vite)
 
 ```bash
 cd frontend
-
-# Instalar dependencias
 npm install
 ```
 
----
-
-## Ejecutar la aplicación
-
-Necesitas **dos terminales abiertas al mismo tiempo**.
+## Run the application
+You need **two terminals** running at the same time.
 
 ### Terminal 1 — Backend
-
 ```bash
 cd backend
-.venv\Scripts\activate        # Windows
-# source .venv/bin/activate   # macOS/Linux
-
+.venv\Scripts\Activate.ps1   # Windows PowerShell
 uvicorn main:app --reload --port 8000
 ```
-
-✅ Listo cuando veas:
-```
-INFO:     Uvicorn running on http://127.0.0.1:8000
-INFO:     Application startup complete.
-```
-
-📄 Swagger UI: **http://localhost:8000/api/docs**
-
----
+Backend ready at: `http://localhost:8000` (Swagger UI: `http://localhost:8000/api/docs`)
 
 ### Terminal 2 — Frontend
-
 ```bash
 cd frontend
 npm run dev
 ```
+Frontend ready at: `http://localhost:5173`
 
-✅ Listo cuando veas:
-```
-  VITE v6.x  ready
+> Both servers must be running. The frontend calls the backend at `http://localhost:8000`.
 
-  ➜  Local:   http://localhost:5173/
-```
+## Quick demo flow (for judges)
+1. Open `http://localhost:5173`
+2. Select **Moon** or **Mars** mission target
+3. Click a location on the Earth map (or choose a preset, if available)
+4. Run analysis to view live Earth telemetry, fidelity score, and risk assessment
 
-🚀 Abre **http://localhost:5173** en tu navegador.
+## Limitations & next steps
+- Planetary target parameters are curated NASA reference values (not fetched live per-point) due to the complexity of mission datasets and hackathon time constraints.
+- Fidelity/risk scoring is a heuristic model for analog comparison and decision support, not a flight-certified assessment.
+- **Next steps:** integrate additional NASA datasets (e.g., MRO/MGS products, more landing sites), add temporal/weather variability, exportable reports, and validation against known analog sites.
 
----
-
-## Resumen rápido
-
-```
-Paso 1: cd backend  →  python -m venv .venv  →  pip install -r requirements.txt
-Paso 2: cd frontend →  npm install
-Paso 3: Terminal 1  →  uvicorn main:app --reload --port 8000
-Paso 4: Terminal 2  →  npm run dev
-Paso 5: Abre        →  http://localhost:5173
-```
-
-> ⚠️ Ambos servidores deben estar corriendo al mismo tiempo. El frontend llama al backend en `localhost:8000`.
-
----
-
-## Estructura del proyecto
-
-```
+## Project structure
+```text
 ALTAIR/
-├── backend/                  ← Python FastAPI
-│   ├── main.py               ← Servidor principal
-│   ├── requirements.txt      ← Dependencias Python
-│   ├── .env.template         ← Copiar a .env
+├── backend/                  # Python FastAPI
+│   ├── main.py               # App entrypoint
+│   ├── requirements.txt
+│   ├── .env.template
+│   ├── data/
+│   │   └── planetary_targets.json
 │   └── app/
-│       ├── services/         ← NASA POWER API + motor de fidelidad
-│       └── api/endpoints/    ← /planets y /analysis
-│
-└── frontend/                 ← React + Vite
-    ├── package.json          ← Dependencias Node
+│       ├── api/endpoints/    # /planets, /analysis
+│       └── services/         # NASA POWER/Open-Elevation + fidelity engine
+└── frontend/                 # React + Vite
     └── src/
-        ├── views/            ← Pantallas principales
-        └── components/       ← Mapa, telemetría, paneles
+        ├── views/            # Main screens
+        ├── components/       # Map, telemetry, panels
+        └── api/              # Backend client
 ```
 
 ---
-
-## Datos y APIs utilizadas
-
-| Fuente | Para qué |
-|--------|----------|
-| NASA POWER API | Temperatura, radiación solar, viento (en vivo) |
-| Open-Elevation API | Elevación del terreno |
-| NASA LRO Diviner | Parámetros reales de la Luna |
-| Perseverance MEDA | Parámetros reales de Marte (Jezero Crater) |
-
-> No se requiere ninguna API key — todas las fuentes son públicas.
-
----
-
-*Team Stalred / STRD · NASA Space Apps Challenge · 2026*
+*Team Stalred / STRD — NASA Space Apps Challenge 2026*

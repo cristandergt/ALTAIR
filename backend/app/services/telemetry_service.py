@@ -37,7 +37,7 @@ async def fetch_earth_telemetry(lat: float, lon: float) -> dict:
     Returns a dict with keys:
         temperature_min_c, temperature_max_c, temperature_mean_c,
         solar_irradiance_wm2, wind_speed_ms, precipitation_mm_day,
-        elevation_m, lat, lon
+        elevation_m, lat, lon, source, data_quality
     """
     temperature_min_c: Optional[float] = None
     temperature_max_c: Optional[float] = None
@@ -46,6 +46,8 @@ async def fetch_earth_telemetry(lat: float, lon: float) -> dict:
     wind_speed_ms: Optional[float] = None
     precipitation_mm_day: Optional[float] = None
     elevation_m: Optional[float] = None
+    power_live = False
+    elev_live = False
 
     # ── NASA POWER ──────────────────────────────────────────────────────────
     try:
@@ -71,7 +73,6 @@ async def fetch_earth_telemetry(lat: float, lon: float) -> dict:
             ann = series.get("ANN")
             if ann is not None and ann != -999.0:
                 return round(float(ann), 2)
-            # Fallback: average of monthly values
             monthly = [v for k, v in series.items() if k != "ANN" and v != -999.0]
             return round(sum(monthly) / len(monthly), 2) if monthly else None
 
@@ -81,6 +82,7 @@ async def fetch_earth_telemetry(lat: float, lon: float) -> dict:
         solar_irradiance_wm2 = _annual_mean("ALLSKY_SFC_SW_DWN")
         wind_speed_ms = _annual_mean("WS10M")
         precipitation_mm_day = _annual_mean("PRECTOTCORR")
+        power_live = any(v is not None for v in [temperature_mean_c, solar_irradiance_wm2, wind_speed_ms, precipitation_mm_day])
 
         logger.info(f"NASA POWER: lat={lat}, lon={lon} → T2M={temperature_mean_c}°C")
 
@@ -102,11 +104,26 @@ async def fetch_earth_telemetry(lat: float, lon: float) -> dict:
             raw_elev = results[0].get("elevation")
             if raw_elev is not None:
                 elevation_m = round(float(raw_elev), 1)
+                elev_live = True
 
         logger.info(f"Open-Elevation: lat={lat}, lon={lon} → {elevation_m}m")
 
     except Exception as exc:
         logger.warning(f"Open-Elevation fetch failed for ({lat}, {lon}): {exc}")
+
+    missing = [k for k, v in {
+        "temperature": temperature_mean_c,
+        "solar": solar_irradiance_wm2,
+        "wind": wind_speed_ms,
+        "precipitation": precipitation_mm_day,
+        "elevation": elevation_m,
+    }.items() if v is None]
+    if power_live and elev_live and not missing:
+        dq_status, dq_label = "live", "Live NASA POWER + Open-Elevation"
+    elif power_live or elev_live:
+        dq_status, dq_label = "partial", "Partial live data (some fields unavailable)"
+    else:
+        dq_status, dq_label = "unavailable", "Live sources unavailable"
 
     return {
         "temperature_min_c": temperature_min_c,
@@ -119,4 +136,11 @@ async def fetch_earth_telemetry(lat: float, lon: float) -> dict:
         "lat": lat,
         "lon": lon,
         "source": "NASA POWER Climatology API v2.5 + Open-Elevation API",
+        "data_quality": {
+            "status": dq_status,
+            "label": dq_label,
+            "power_live": power_live,
+            "elevation_live": elev_live,
+            "missing_fields": missing,
+        },
     }

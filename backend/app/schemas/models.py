@@ -34,6 +34,7 @@ class EarthTelemetry(BaseModel):
     source: str = "NASA POWER API + Open-Elevation API"
     lat: float
     lon: float
+    data_quality: Optional[dict] = None
 
 
 class MetricComparison(BaseModel):
@@ -62,3 +63,4 @@ class FidelityReport(BaseModel):
     risk_assessment: list[RiskItem]
     operational_summary: str
     data_sources: list[str]
+    methodology: Optional[dict] = None

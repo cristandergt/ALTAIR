@@ -57,13 +57,6 @@ const TILE_LAYERS = {
     maxZoom: 9,
     tileSize: 256,
   },
-  nasa_night: {
-    label: 'NASA Night Lights',
-    url: 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2024-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg',
-    attribution: '© <a href="https://earthdata.nasa.gov">NASA EARTHDATA/GIBS</a>',
-    maxZoom: 8,
-    tileSize: 256,
-  },
 }
 
 // ── Map click handler component ───────────────────────────────────────────────
@@ -133,14 +126,22 @@ function LayerControl({ activeLayer, setActiveLayer }) {
 }
 
 // ── Main MapPanel ─────────────────────────────────────────────────────────────
+const HARDWARE_VISUALS = {
+  Rover: { src: '/hardware/rover.svg', label: 'Rover Deployment', desc: 'Surface mobility operations' },
+  'EVA Suit': { src: '/hardware/eva-suit.svg', label: 'EVA Suit Operations', desc: 'Extravehicular activity' },
+  Habitat: { src: '/hardware/habitat.svg', label: 'Habitat Module', desc: 'Pressurized surface base' },
+}
+
 export default function MapPanel() {
   const selectedTarget = useStore((s) => s.selectedTarget)
+  const selectedHardware = useStore((s) => s.selectedHardware)
   const clickedCoords = useStore((s) => s.clickedCoords)
   const isAnalyzing = useStore((s) => s.isAnalyzing)
   const [activeLayer, setActiveLayer] = useState('dark')
 
   const isMoon = selectedTarget?.id === 'lunar_south_pole'
   const accentColor = isMoon ? '#29B6F6' : '#EF4444'
+  const hwVisual = HARDWARE_VISUALS[selectedHardware] || HARDWARE_VISUALS.Rover
 
   const tileConfig = TILE_LAYERS[activeLayer]
 
@@ -200,6 +201,24 @@ export default function MapPanel() {
 
         {/* Layer switcher overlay */}
         <LayerControl activeLayer={activeLayer} setActiveLayer={setActiveLayer} />
+
+        {/* Hardware visual */}
+        <div className="absolute right-3 bottom-10 z-[900] w-36 sm:w-40 bg-surface/90 border border-border rounded-sm shadow-panel overflow-hidden backdrop-blur-sm">
+          <div className="px-2 py-1 border-b border-border flex items-center justify-between">
+            <span className="label-tag" style={{ color: accentColor }}>ACTIVE HARDWARE</span>
+          </div>
+          <div className="p-2">
+            <img
+              src={hwVisual.src}
+              alt={selectedHardware}
+              className="w-full h-28 object-contain bg-void/40 rounded-sm border border-border/60"
+            />
+            <div className="mt-2">
+              <div className="text-xs font-medium text-text-primary">{hwVisual.label}</div>
+              <div className="text-2xs text-text-dim leading-snug">{hwVisual.desc}</div>
+            </div>
+          </div>
+        </div>
 
         {/* Analysis loading overlay */}
         {isAnalyzing && (

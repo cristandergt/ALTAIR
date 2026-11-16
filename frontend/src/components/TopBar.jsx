@@ -3,7 +3,7 @@
  * Mission context header with target, status, and navigation.
  */
 
-import { Satellite, ChevronRight, ArrowLeft, Activity } from 'lucide-react'
+import { Satellite, ArrowLeft, Activity } from 'lucide-react'
 import useStore from '../store/useStore'
 
 export default function TopBar() {
@@ -14,30 +14,29 @@ export default function TopBar() {
 
   return (
     <div
-      className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface/80 shrink-0"
+      className="flex items-center justify-between px-4 h-11 border-b border-border bg-surface/80 shrink-0"
       style={{ borderBottomColor: `${accentColor}22` }}
     >
-      {/* Left: breadcrumb */}
+      {/* Left: navigation */}
       <div className="flex items-center gap-3">
         <button
           onClick={() => useStore.setState({ appPhase: 'destination', analysisResult: null, clickedCoords: null })}
-          className="flex items-center gap-1.5 text-text-dim hover:text-text-secondary transition-colors text-xs"
+          className="flex items-center gap-2 px-3 py-1.5 border rounded-sm text-xs font-semibold tracking-wide transition-colors"
+          style={{ borderColor: `${accentColor}66`, color: accentColor, background: `${accentColor}14` }}
+          title="Return to mission target selection"
         >
-          <ArrowLeft size={12} />
-          <span className="label-tag">MISSION SELECT</span>
+          <ArrowLeft size={13} />
+          CHANGE PLANET
         </button>
 
-        <span className="text-border">›</span>
-
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pl-1">
           <Satellite size={12} style={{ color: accentColor }} />
           <span className="label-tag" style={{ color: accentColor }}>
             {selectedTarget?.shortName?.toUpperCase() || 'TARGET'}
           </span>
+          <span className="text-border">›</span>
+          <span className="label-tag">COMMAND CENTER</span>
         </div>
-
-        <span className="text-border">›</span>
-        <span className="label-tag">COMMAND CENTER</span>
       </div>
 
       {/* Center: system name */}
