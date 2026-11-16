@@ -32,25 +32,37 @@ const createAnalogIcon = (color) =>
     iconAnchor: [10, 10],
   })
 
-// ── Tile layer definitions ────────────────────────────────────────────────────
+// ── Tile layer definitions (all API-key-free) ────────────────────────────────
 const TILE_LAYERS = {
   dark: {
     label: 'Dark Basemap',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '© <a href="https://www.openstreetmap.org">OSM</a> © <a href="https://carto.com">CARTO</a>',
+    // Esri World Dark Gray — free, no API key required
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles © <a href="https://www.esri.com">Esri</a> — Esri, DeLorme, NAVTEQ',
+    maxZoom: 16,
+    tileSize: 256,
+  },
+  satellite: {
+    label: 'Satellite Imagery',
+    // Esri World Imagery — free, no API key required
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles © <a href="https://www.esri.com">Esri</a> — Source: Esri, Maxar, Earthstar Geographics',
     maxZoom: 19,
+    tileSize: 256,
   },
   nasa_true: {
     label: 'NASA GIBS True Color',
     url: 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-01-01/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg',
     attribution: '© <a href="https://earthdata.nasa.gov">NASA EARTHDATA/GIBS</a>',
     maxZoom: 9,
+    tileSize: 256,
   },
   nasa_night: {
     label: 'NASA Night Lights',
     url: 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2024-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg',
     attribution: '© <a href="https://earthdata.nasa.gov">NASA EARTHDATA/GIBS</a>',
     maxZoom: 8,
+    tileSize: 256,
   },
 }
 
@@ -165,6 +177,7 @@ export default function MapPanel() {
             url={tileConfig.url}
             attribution={tileConfig.attribution}
             maxZoom={tileConfig.maxZoom}
+            tileSize={tileConfig.tileSize || 256}
           />
 
           <ClickHandler accentColor={accentColor} />

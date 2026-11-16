@@ -7,10 +7,16 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
 
 async function apiFetch(path, options = {}) {
   const url = `${API_BASE}${path}`
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  })
+  let res
+  try {
+    res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      ...options,
+    })
+  } catch (networkErr) {
+    // Backend is not running or unreachable
+    throw new Error('Backend unreachable — make sure the FastAPI server is running on port 8000.')
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }))
     throw new Error(err.detail || `API Error ${res.status}`)

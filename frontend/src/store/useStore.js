@@ -68,7 +68,8 @@ const useStore = create((set, get) => ({
       })
       set({ analysisResult: result, isAnalyzing: false })
     } catch (err) {
-      set({ analysisError: err.message, isAnalyzing: false })
+      const msg = err?.message || String(err) || 'Unknown error — check the backend server.'
+      set({ analysisError: msg, isAnalyzing: false })
     }
   },
 }))
